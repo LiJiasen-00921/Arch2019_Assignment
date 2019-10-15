@@ -10,14 +10,6 @@ Stay tuned by pulling this repo to your own.
 
 ## Project Structure & Instruction
 
-### Adder Assignment (0 points)
-
-- It is just a warm up
-
-- sim: used for testing adder in simulation
-- src: template & support files for adder assignment
-- ctrl: controller for testing adder on FPGA via UART
-
 #### Simulation
 
 Using Vivado

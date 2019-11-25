@@ -82,21 +82,48 @@ Speed and special arch can be bonuses.
 - testcase/testname.in:  input
 - testcase/testname.ans: answer
 
+#### Install RiscV toolchain 
+Here is a brief introduction about how to install RiscV toolchain 
+for linux or WSL on Windows in 2019.
+Before installation, make sure you have at least *8GB free space*. First clone the official repository: 
+```
+git clone --recursive https://github.com/riscv/riscv-gnu-toolchain.git && cd riscv-gnu-toolchain
+```
+This might take some time. It is suggested to add proxy for your git or just copy the software from TA (If you don't have one, ask TA for help):  
+The following command can activate proxy until you reboost your computer. 
+```
+export all_proxy="http://127.0.0.1:1080"
+export ALL_PROXY="http://127.0.0.1:1080"
+```
+Now we can start to compile the toolchain
+```
+./configure --prefix=/opt/riscv --with-arch=rv32ia --with-abi=ilp32 
+sudo make all -j12
+```
+**Remark**: Here `--with-arch=rv32ia` means we only use the ISA with 32-bit address space, 32 registers and atomic instruction (That's what A-extension means). Using `--with-arch=rv32i` will leads to build error. And using `--with-arch=rv32gc` (This is suggested by the official repository, here `g` stands for general which means `i,m,a,f,d` extensions, `c` stands for support  16-bit instructions) will make our `build.sh` crashed.
+
+You may wait for about an hour without `-j12`. `-j12` means that you use 12 threads. After that add the 
+toolchain to your PATH, that is adding the following to your `$HOME/.bashrc` or `$HOME/.zshrc` if you are using zsh.
+```
+export PATH=$PATH:/opt/riscv/bin
+```
+check if your toolchain works by  
+```
+riscv32-unknown-elf-gcc -v
+riscv32-unknown-linux-gnu-gcc -v 
+```
 #### Building testcase
 
 In directory 'riscv', run script
 
-    ./build_test.sh testname
-
-This will compile 'testcase/testname.c' and output all intermediate files to directory 'test/'
+    ./build.sh all
 
 Intermediate files:
 
-- test/test.c: copy of the testcase source file
-- test/test.om: compiled ELF file
-- test/test.data: RAM data that can be read by verilog
-- test/test.bin: RAM data in binary
-- test/test.dump: decompilation of the ELF file
+- testdata/om/testname.om: compiled ELF file
+- testdata/data/testname.data: RAM data that can be read by verilog
+- testdata/bin/testname.bin: RAM data in binary
+- testdata/dump/testname.dump: decompilation of the ELF file
 
 #### Simulation
 
@@ -190,4 +217,3 @@ Query Error Code
 
 - In 'sys/rom.s', the sp is now initialized to 0x00020000 (can be enlarged if running in simulation).
 - When running program on FPGA, do not allocate too much(10000+ int) space as the RAM is only 128KB.
-- run ```./configure --prefix=/opt/riscv --with-arch=rv32i --with-abi=ilp32``` before making the RISC-V toolchain.

@@ -4,10 +4,6 @@ Project resources for System(I) 2019 Fall
 
 Stay tuned by pulling this repo to your own.
 
-## Acknowledgment
-
-### Thank wjwwood and Y.F.Lin for the Course Project
-
 ## Project Structure & Instruction
 
 #### Simulation
